@@ -1,25 +1,40 @@
-import * as THREE from 'three';
+//Setup Scene
+import * as THREE from "three";
+import SetupHelper from './SceneSetupHelper.js'
+import BurgerBuilder from './BurgerBuilder.js'
+const setupHelper = new SetupHelper();
+setupHelper.SetAnimationLoop(animate);
 
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize( window.innerWidth, window.innerHeight );
-renderer.setAnimationLoop( animate );
-document.body.appendChild( renderer.domElement );
+//get important references
+const renderer = setupHelper.renderer;
+const scene = setupHelper.scene;
+const camera = setupHelper.camera;
 
-const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-const cube = new THREE.Mesh( geometry, material );
-scene.add( cube );
 
-camera.position.z = 5;
+//Build burger
+const burgerBuilder = new BurgerBuilder();
 
-function animate() {
+for(let i = 0; i < 10; i++){
+    burgerBuilder.StartBuildingBurger().AddBottomBread().AddPatty().AddLettuice().AddTopBread();
+    const burger = burgerBuilder.burger;
 
-	cube.rotation.x += 0.01;
-	cube.rotation.y += 0.01;
+    const randomX = Math.random() * (10 + 10) - 10;
 
+    const randomY = Math.random() * (10 + 10) - 10;
+
+    const randomZ = Math.random() * (10 + 10) - 10;
+
+    burger.position.set(randomX, randomY, randomZ)
+
+    scene.add(burger);
+
+}
+
+
+
+//animate loop func
+function animate() 
+{
 	renderer.render( scene, camera );
-
 }
